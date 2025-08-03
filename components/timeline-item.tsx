@@ -11,6 +11,7 @@ interface TimelineItemProps {
     company: string
     period: string
     description: string
+    keywords: string[]
   }
   index: number
   isLast: boolean
@@ -20,36 +21,36 @@ const TimelineItem = ({ experience, index, isLast }: TimelineItemProps) => {
   const [isHovered, setIsHovered] = useState(false)
 
   // Determine if this is an education or work experience
-const isEducation = experience.company.includes("University") || experience.company.includes("School")
+  const isEducation = experience.company.includes("University") || experience.company.includes("School")
 
-// Assign different gradient colors based on type
-const gradientFrom = isEducation ? "green-500" : "green-500"
-const gradientTo = isEducation ? "blue-500" : "purple-500"
-const borderColor = isEducation ? "blue-500/20" : "red-500/20"
-const hoverBorderColor = isEducation ? "blue-400/40" : "pink-400/40"
-const textGradientFrom = isEducation ? "blue-400" : "red-400"
-const textGradientTo = isEducation ? "cyan-400" : "fuchsia-400"
+  // Get badge color based on technology - same as project cards
+  const getBadgeColor = (tag: string) => {
+    const tag_lower = tag.toLowerCase()
 
-  // Get keywords to highlight
-  const getKeywords = () => {
-    const description = experience.description.toLowerCase()
-    const keywords = []
-
-    if (description.includes(".net")) keywords.push(".NET")
-    if (description.includes("angular")) keywords.push("Angular")
-    if (description.includes("sql")) keywords.push("SQL")
-    if (description.includes("api")) keywords.push("API")
-    if (description.includes("ci/cd")) keywords.push("CI/CD")
-    if (description.includes("microservices")) keywords.push("Microservices")
-    if (description.includes("python")) keywords.push("Python")
-    if (description.includes("iot")) keywords.push("IoT")
-    if (description.includes("digital marketing")) keywords.push("Digital Marketing")
-    if (description.includes("seo")) keywords.push("SEO")
-
-    return keywords
+    if (tag_lower.includes("net") || tag_lower.includes("asp")) {
+      return "bg-purple-900/50 hover:bg-purple-800/50 text-purple-300 border border-purple-500/30"
+    } else if (tag_lower.includes("angular") || tag_lower.includes("typescript")) {
+      return "bg-red-900/50 hover:bg-red-800/50 text-red-300 border border-red-500/30"
+    } else if (tag_lower.includes("sql") || tag_lower.includes("database")) {
+      return "bg-blue-900/50 hover:bg-blue-800/50 text-blue-300 border border-blue-500/30"
+    } else if (tag_lower.includes("python") || tag_lower.includes("nlp") || tag_lower.includes("machine")) {
+      return "bg-yellow-900/50 hover:bg-yellow-800/50 text-yellow-300 border border-yellow-500/30"
+    } else if (tag_lower.includes("azure") || tag_lower.includes("cloud")) {
+      return "bg-cyan-900/50 hover:bg-cyan-800/50 text-cyan-300 border border-cyan-500/30"
+    } else if (tag_lower.includes("iot") || tag_lower.includes("arduino") || tag_lower.includes("sensors")) {
+      return "bg-green-900/50 hover:bg-green-800/50 text-green-300 border border-green-500/30"
+    } else if (tag_lower.includes("mobile") || tag_lower.includes("flutter")) {
+      return "bg-pink-900/50 hover:bg-pink-800/50 text-pink-300 border border-pink-500/30"
+    } else if (tag_lower.includes("ci/cd") || tag_lower.includes("microservices")) {
+      return "bg-orange-900/50 hover:bg-orange-800/50 text-orange-300 border border-orange-500/30"
+    } else if (tag_lower.includes("marketing") || tag_lower.includes("seo")) {
+      return "bg-green-900/50 hover:bg-green-800/50 text-green-300 border border-green-500/30"
+    } else if (tag_lower.includes("social")) {
+      return "bg-blue-900/50 hover:bg-blue-800/50 text-blue-300 border border-blue-500/30"
+    } else {
+      return "bg-gray-900/50 hover:bg-gray-800/50 text-gray-300 border border-gray-500/30"
+    }
   }
-
-  const keywords = getKeywords()
 
   return (
     <motion.div
@@ -60,14 +61,10 @@ const textGradientTo = isEducation ? "cyan-400" : "fuchsia-400"
       className="relative pl-8 pb-12"
     >
       {/* Timeline line */}
-      {!isLast && (
-        <div className={`absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-${gradientFrom} to-${gradientTo}`} />
-      )}
+      {!isLast && <div className="absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-green-500 to-pink-500" />}
 
       {/* Timeline dot */}
-      <div
-        className={`absolute left-0 top-0 w-6 h-6 -ml-3 rounded-full bg-black border-2 border-${gradientFrom} z-10`}
-      />
+      <div className="absolute left-0 top-0 w-6 h-6 -ml-3 rounded-full bg-black border-2 border-green-500 z-10" />
 
       {/* Timeline content */}
       <motion.div
@@ -77,38 +74,31 @@ const textGradientTo = isEducation ? "cyan-400" : "fuchsia-400"
         onHoverEnd={() => setIsHovered(false)}
       >
         <Card
-          className={`backdrop-blur-sm bg-black/30 border border-${borderColor} shadow-lg shadow-${gradientFrom}/5 transition-all duration-300 ${
-            isHovered ? `border-${hoverBorderColor}` : ""
+          className={`backdrop-blur-sm bg-black/30 border border-green-500/20 shadow-lg shadow-green-500/5 transition-all duration-300 ${
+            isHovered ? "border-green-400/40" : ""
           }`}
         >
           <CardContent className="p-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
               <div>
-                <h3
-                  className={`text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-${textGradientFrom} to-${textGradientTo}`}
-                >
+                <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-cyan-400">
                   {experience.title}
                 </h3>
                 <p className="text-gray-400">{experience.company}</p>
               </div>
               <div className="mt-2 md:mt-0">
-                <span
-                  className={`inline-block px-3 py-1 rounded-full text-sm bg-${gradientFrom}/30 text-${gradientFrom}-400 border border-${gradientFrom}/30`}
-                >
+                <Badge className="bg-green-900/50 hover:bg-green-800/50 text-green-300 border border-green-500/30">
                   {experience.period}
-                </span>
+                </Badge>
               </div>
             </div>
 
-            <p className="text-gray-300 mb-3">{experience.description}</p>
+            <p className="text-gray-300 mb-4">{experience.description}</p>
 
-            {keywords.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-3">
-                {keywords.map((keyword, i) => (
-                  <Badge
-                    key={i}
-                    className={`bg-${gradientFrom}/20 text-${gradientFrom}-300 border border-${gradientFrom}/30`}
-                  >
+            {experience.keywords && experience.keywords.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {experience.keywords.map((keyword, i) => (
+                  <Badge key={i} className={getBadgeColor(keyword)}>
                     {keyword}
                   </Badge>
                 ))}

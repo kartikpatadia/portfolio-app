@@ -2,22 +2,6 @@ import type { Config } from "tailwindcss"
 
 const config = {
   darkMode: ["class"],
-  safelist: [
-    // Light mode patterns
-    { pattern: /from-(red|orange|yellow|green|blue|purple|pink|cyan)-\d+/ },
-    { pattern: /to-(red|orange|yellow|green|blue|purple|pink|cyan)-\d+/ },
-    { pattern: /bg-(red|orange|yellow|green|blue|purple|pink|cyan)-\d+\/\d+/ },
-    { pattern: /text-(red|orange|yellow|green|blue|purple|pink|cyan)-\d+/ },
-    { pattern: /border-(red|orange|yellow|green|blue|purple|pink|cyan)-\d+(\/\d+)?/ },
-    { pattern: /shadow-(red|orange|yellow|green|blue|purple|pink|cyan)-\d+\/\d+/ },
-    // Dark mode patterns
-    { pattern: /dark:from-(red|orange|yellow|green|blue|purple|pink|cyan)-\d+/ },
-    { pattern: /dark:to-(red|orange|yellow|green|blue|purple|pink|cyan)-\d+/ },
-    { pattern: /dark:bg-(red|orange|yellow|green|blue|purple|pink|cyan)-\d+\/\d+/ },
-    { pattern: /dark:text-(red|orange|yellow|green|blue|purple|pink|cyan)-\d+/ },
-    { pattern: /dark:border-(red|orange|yellow|green|blue|purple|pink|cyan)-\d+(\/\d+)?/ },
-    { pattern: /dark:shadow-(red|orange|yellow|green|blue|purple|pink|cyan)-\d+\/\d+/ },
-  ],
   content: [
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",

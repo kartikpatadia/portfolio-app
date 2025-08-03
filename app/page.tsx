@@ -2,6 +2,8 @@
 
 import type React from "react"
 
+import type { ReactElement } from "react"
+
 import { useEffect, useState, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useTheme } from "next-themes"
@@ -12,7 +14,6 @@ import {
   Globe,
   Layers,
   Monitor,
-  ChevronDown,
   ExternalLink,
   Mail,
   Linkedin,
@@ -23,6 +24,8 @@ import {
   Brain,
   MapPin,
   Phone,
+  FileText,
+  Cloud,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -35,9 +38,87 @@ import { useMobile } from "@/hooks/use-mobile"
 import ParticleBackground from "@/components/particle-background"
 import ProjectCard from "@/components/project-card"
 import SkillOrb from "@/components/skill-orb"
-import TimelineItem from "@/components/timeline-item"
+import TimelineItemComponent from "@/components/timeline-item"
+import MatrixBackground from "@/components/matrix-background"
 
-export default function Home() {
+// CPU Loading Component
+const CPULoadingScreen = () => {
+  const quotes = [
+  "Be so good they can’t ignore you.",
+  "You didn’t come this far to only come this far.",
+  "Prove yourself to yourself, not others.",
+  "Discipline is the loudest form of self-respect.",
+  "Lions don’t lose sleep over the opinions of sheep.",
+  "Obsessed is a word the lazy use for the dedicated.",
+  "The pain you feel today builds the strength you need tomorrow.",
+  "Do it broke. Do it scared. Do it anyway.",
+  "Work until your idols become your rivals.",
+  "You are one decision away from a completely different life.",
+  "Fall seven times, rise eight.",
+  "Speed is a byproduct of clarity.",
+  "Comfort is the enemy of greatness.",
+  "You either suffer the pain of discipline or the pain of regret.",
+  "Let them sleep while you grind.",
+  "Dreams don’t work unless you do.",
+  "Build silently. Let your success make the noise.",
+  "No plan B. Burn the boats.",
+  "Victory demands relentless audacity.",
+  "No permission needed to dominate.",
+  "Fueled by scars, forging ahead.",
+  "Failure kneels before persistence.",
+  "Comfort kills kings.",
+  "Excellence demands unyielding grit.",
+  "No apology for greatness.",
+  "Limits? Not in my blood.",
+  "Fear bows to me.",
+  "Rise defiant from every fall.",
+  "No mercy for self-doubt.",
+  "Devour challenges, spit out excuses.",
+  "Giving up doesn’t live here.",
+  "Forward is the only gear.",
+  "Unbreakable will, unstoppable force.",
+  "Hunger is my compass.",
+  "No chains can hold ambition.",
+  "Never dilute your fire."
+]
+
+
+  const [currentQuote, setCurrentQuote] = useState("")
+
+  useEffect(() => {
+    // Select a random quote when the component mounts
+    const randomIndex = Math.floor(Math.random() * quotes.length)
+    setCurrentQuote(quotes[randomIndex])
+  }, [])
+
+  return (
+    <motion.div
+      className="fixed inset-0 z-50 bg-black flex items-center justify-center overflow-hidden"
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }} // Duration of the fade-out
+    >
+      {/* Matrix Background */}
+      <MatrixBackground />
+
+      {/* Quote in the middle */}
+      <motion.div
+        className="relative z-10 text-center px-4"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.5 }}
+      >
+        <p className="text-xl md:text-3xl font-medium text-white max-w-3xl mx-auto leading-tight">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-cyan-300 to-blue-300">
+            {currentQuote}
+          </span>
+        </p>
+      </motion.div>
+    </motion.div>
+  )
+}
+
+export default function Home(): ReactElement {
   const { theme, setTheme } = useTheme()
   const isMobile = useMobile()
   const [scrollY, setScrollY] = useState(0)
@@ -55,10 +136,10 @@ export default function Home() {
 
     window.addEventListener("scroll", handleScroll, { passive: true })
 
-    // Simulate loading
+    // Simulate loading - significantly reduced duration
     const timer = setTimeout(() => {
       setIsLoaded(true)
-    }, 1000)
+    }, 2000) // Set to 2 seconds
 
     return () => {
       window.removeEventListener("scroll", handleScroll)
@@ -66,17 +147,25 @@ export default function Home() {
     }
   }, [])
 
-  function scrollTo(ref: React.RefObject<HTMLElement | null>) {
-    ref.current?.scrollIntoView({ behavior: "smooth" });
+  // Enhanced smooth scroll function
+  const scrollTo = (ref: React.RefObject<HTMLElement | null>) => {
+    if (ref.current) {
+      const headerHeight = 80 // Account for fixed header
+      const elementPosition = ref.current.offsetTop - headerHeight
+
+      window.scrollTo({
+        top: elementPosition,
+        behavior: "smooth",
+      })
+    }
   }
-  
 
   const projects = [
     {
       title: "Healthcare Management System",
       description:
         "A comprehensive US-based healthcare application built with .NET, Angular, and SQL, featuring microservices architecture and CI/CD pipelines.",
-      image: "/placeholder.svg?height=300&width=500",
+      image: "/images/healthcareTech.webp",
       tags: [".NET Core", "Angular", "SQL Server", "Azure", "CI/CD", "Microservices"],
       github: "https://github.com",
       demo: "https://demo.com",
@@ -85,7 +174,7 @@ export default function Home() {
       title: "Hinglish Text-to-Speech",
       description:
         "Python-based application that converts Hinglish text (Hindi written in English) to speech, utilizing natural language processing techniques.",
-      image: "/placeholder.svg?height=300&width=500",
+      image: "/images/HinglishTTS.png",
       tags: ["Python", "NLP", "Speech Synthesis", "Machine Learning"],
       github: "https://github.com",
       demo: "https://demo.com",
@@ -94,7 +183,7 @@ export default function Home() {
       title: "IoT Smart Home System",
       description:
         "IoT-based smart home automation system using Arduino and cloud connectivity for remote monitoring and control.",
-      image: "/placeholder.svg?height=300&width=500",
+      image: "/images/IoT.png",
       tags: ["IoT", "Arduino", "Cloud", "Sensors", "Mobile App"],
       github: "https://github.com",
       demo: "https://demo.com",
@@ -102,17 +191,21 @@ export default function Home() {
   ]
 
   const skills = [
+    { name: "AI Prompting", level: 90, icon: <Brain className="h-6 w-6" /> },
     { name: "ASP.NET", level: 90, icon: <Server className="h-6 w-6" /> },
     { name: ".NET Core", level: 85, icon: <Code className="h-6 w-6" /> },
     { name: "Angular", level: 85, icon: <Layers className="h-6 w-6" /> },
     { name: "TypeScript", level: 80, icon: <Code className="h-6 w-6" /> },
     { name: "SQL", level: 85, icon: <Database className="h-6 w-6" /> },
-    { name: "Python", level: 75, icon: <Code className="h-6 w-6" /> },
-    { name: "Azure", level: 70, icon: <Globe className="h-6 w-6" /> },
     { name: "IoT", level: 80, icon: <Monitor className="h-6 w-6" /> },
-    { name: "Flutter", level: 65, icon: <Smartphone className="h-6 w-6" /> },
+    { name: "Python", level: 75, icon: <Code className="h-6 w-6" /> },
+    { name: "MS Office", level: 75, icon: <FileText className="h-6 w-6" /> },
     { name: "DevOps", level: 75, icon: <GitBranch className="h-6 w-6" /> },
+    { name: "Azure", level: 70, icon: <Globe className="h-6 w-6" /> },
     { name: "GenAI", level: 70, icon: <Brain className="h-6 w-6" /> },
+    { name: "Flutter", level: 65, icon: <Smartphone className="h-6 w-6" /> },
+    { name: "AWS", level: 60, icon: <Cloud className="h-6 w-6" /> },
+    { name: "React", level: 55, icon: <Layers className="h-6 w-6" /> },
     { name: "Microservices", level: 80, icon: <Layers className="h-6 w-6" /> },
   ]
 
@@ -123,6 +216,7 @@ export default function Home() {
       period: "July 2022 - Present",
       description:
         "Playing a key role in developing and enhancing a US-based healthcare application using .NET with OOP principles and SQL as the database. Designing and implementing a dynamic front end with Angular, ensuring an intuitive user experience. Successfully developing, testing, and deploying APIs through CI/CD pipelines for seamless integration, while leveraging .NET microservices to enhance scalability and optimize performance.",
+      keywords: [".NET", "Angular", "SQL", "Azure", "Microservices"],
     },
     {
       title: "Digital Marketing Head",
@@ -130,6 +224,7 @@ export default function Home() {
       period: "Nov 2021 - Jan 2022",
       description:
         "Provided weekly updates on digital marketing campaigns to clients, discussing strategic initiatives and SEO methods for improvement. Created social media content with consistent content and tone, enhancing brand visibility and engagement.",
+      keywords: ["Marketing", "SEO", "Social Media"],
     },
     {
       title: "Bachelor of Technology",
@@ -137,38 +232,13 @@ export default function Home() {
       period: "Aug 2018 - July 2022",
       description:
         "Specialized in Computer Science with a focus on IoT technologies. Developed a Python-based application for 'Hinglish text to speech' conversion. Achieved a CGPA of 7.6 while balancing academic excellence with practical project work.",
+      keywords: ["IoT", "Python", "Machine Learning"],
     },
   ]
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden">
-      <AnimatePresence>
-        {!isLoaded && (
-          <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black"
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: "60%" }}
-              transition={{ duration: 0.8 }}
-              className="h-1 bg-gradient-to-r from-purple-500 via-blue-500 to-green-500 rounded-full"
-            />
-            <motion.h2
-              className="absolute mt-8 text-xl font-mono"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-            >
-              <span className="text-purple-500">Initializing</span>
-              <span className="text-blue-500">_</span>
-              <span className="text-green-500">System</span>
-            </motion.h2>
-          </motion.div>
-        )}
-      </AnimatePresence>
+    <div className="min-h-screen bg-black text-white overflow-x-hidden smooth-scroll">
+      <AnimatePresence>{!isLoaded && <CPULoadingScreen />}</AnimatePresence>
 
       <header className="fixed top-0 left-0 right-0 z-40 backdrop-blur-md bg-black/30 border-b border-purple-900/30">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -178,9 +248,12 @@ export default function Home() {
             transition={{ delay: 1.2 }}
             className="text-xl font-bold"
           >
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-blue-500 to-green-500">
+            <button
+              onClick={() => window.location.reload()}
+              className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-blue-500 to-green-500 hover:from-purple-400 hover:via-blue-400 hover:to-green-400 transition-all duration-300"
+            >
               KAP
-            </span>
+            </button>
           </motion.div>
 
           {!isMobile && (
@@ -234,17 +307,9 @@ export default function Home() {
             transition={{ delay: 1.6 }}
             className="flex items-center space-x-4"
           >
-            {/* <button
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="p-2 rounded-full bg-gray-800/50 hover:bg-gray-700/50 transition-colors"
-              aria-label="Toggle theme"
-            >
-              {theme === "dark" ? (
-                <Sun className="h-5 w-5 text-yellow-300" />
-              ) : (
-                <Moon className="h-5 w-5 text-blue-300" />
-              )}
-            </button> */}
+            {
+              
+            }
 
             <Button
               onClick={() => scrollTo(contactRef)}
@@ -289,7 +354,7 @@ export default function Home() {
                 className="max-w-2xl mx-auto"
               >
                 <p className="text-lg md:text-xl text-gray-300 mb-8">
-                  Associate Software Engineer | .NET & Angular Developer
+                  Full Stack Developer
                 </p>
 
                 <div className="flex flex-wrap justify-center gap-4">
@@ -310,21 +375,6 @@ export default function Home() {
                   </Button>
                 </div>
               </motion.div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 2.6 }}
-              className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
-            >
-              <button
-                onClick={() => scrollTo(aboutRef)}
-                className="flex flex-col items-center text-gray-400 hover:text-white transition-colors"
-              >
-                <span className="text-sm mb-2">Scroll Down</span>
-                <ChevronDown className="h-6 w-6 animate-bounce" />
-              </button>
             </motion.div>
           </div>
         </section>
@@ -358,9 +408,9 @@ export default function Home() {
               >
                 <div className="relative">
                   <div className="aspect-square rounded-2xl overflow-hidden border border-purple-500/30 shadow-lg shadow-purple-500/10">
-                    <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-blue-900/20 to-cyan-900/20 backdrop-blur-sm" />
+                    {/* <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-blue-900/20 to-cyan-900/20 backdrop-blur-sm" /> */}
                     <img
-                      src="/placeholder.svg?height=600&width=600"
+                      src="images/Me_CowBoy.jpg"
                       alt="Developer Portrait"
                       className="w-full h-full object-cover mix-blend-luminosity opacity-80"
                     />
@@ -451,13 +501,13 @@ export default function Home() {
               viewport={{ once: true, margin: "-100px" }}
               className="text-center mt-12"
             >
-              <Button
+              {/* <Button
                 variant="outline"
-                className="border-blue-500 text-blue-400 hover:bg-blue-950/30 hover:text-blue-300"
+                className="border-blue-500 text-blue-400 hover:bg-blue-950/30 hover:text-blue-300 bg-transparent"
               >
                 View All Projects
                 <ExternalLink className="ml-2 h-4 w-4" />
-              </Button>
+              </Button> */}
             </motion.div>
           </div>
         </section>
@@ -667,7 +717,7 @@ export default function Home() {
 
             <div className="max-w-3xl mx-auto">
               {experiences.map((experience, index) => (
-                <TimelineItem
+                <TimelineItemComponent
                   key={index}
                   experience={experience}
                   index={index}
@@ -846,7 +896,7 @@ export default function Home() {
       <footer className="relative py-8 border-t border-purple-900/30 backdrop-blur-sm bg-black/30">
         <div className="container mx-auto px-4 text-center">
           <p className="text-gray-500">© {new Date().getFullYear()} Kartik A. Patadia. All rights reserved.</p>
-          <p className="text-gray-600 text-sm mt-2">Associate Software Engineer | .NET & Angular Developer</p>
+          <p className="text-gray-600 text-sm mt-2">Full Stack Developer</p>
         </div>
       </footer>
     </div>
