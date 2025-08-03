@@ -410,7 +410,7 @@ export default function Home(): ReactElement {
                   <div className="aspect-square rounded-2xl overflow-hidden border border-purple-500/30 shadow-lg shadow-purple-500/10">
                     {/* <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-blue-900/20 to-cyan-900/20 backdrop-blur-sm" /> */}
                     <img
-                      src="images/Me.heic"
+                      src="images/Me.jpg"
                       alt="Developer Portrait"
                       className="w-full h-full object-cover mix-blend-luminosity opacity-80"
                     />
