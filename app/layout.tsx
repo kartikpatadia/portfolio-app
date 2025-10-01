@@ -7,8 +7,16 @@ const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
   title: "KayPatty",
-  description: "Professional portfolio of Kartik, Associate Software Engineer",
-    generator: 'v0.dev'
+  description: "Portfolio of Kartik Patadia, Full Stack Developer specializing in .NET, Angular, SQL, and Azure cloud solutions.",
+  keywords: "Full Stack Developer, .NET, Angular, SQL, Azure, Healthcare Applications, Kartik Patadia",
+  author: "Kartik Patadia",
+  openGraph: {
+    title: "KayPatty | Full Stack Developer Portfolio",
+    description: "Explore Kartik Patadia’s professional projects in .NET, Angular, SQL and Azure.",
+    url: "https://kaypatty.com",
+    siteName: "KayPatty",
+    type: "website"
+  }
 }
 
 export default function RootLayout({
@@ -17,9 +25,10 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+        {/* Lock to dark theme only */}
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
           {children}
         </ThemeProvider>
       </body>
