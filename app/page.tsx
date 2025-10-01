@@ -130,10 +130,13 @@ export default function Home(): ReactElement {
   const contactRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY)
+    // Always return to top on refresh/navigation and disable scroll restoration
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual"
     }
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior })
 
+    const handleScroll = () => setScrollY(window.scrollY)
     window.addEventListener("scroll", handleScroll, { passive: true })
 
     // Simulate loading - significantly reduced duration
@@ -211,12 +214,20 @@ export default function Home(): ReactElement {
 
   const experiences = [
     {
+      title: "Software Engineer III",
+      company: "Carelon Global Solutions",
+      period: "Sept 2025 - Present",
+      description:
+        "Contributing to the development of a US-based healthcare claims processing and billing system, ensuring accurate charge capture, insurance claim handling, and patient account management. Utilizing .NET with OOP principles and SQL to build scalable back-end modules, while designing Angular-based front ends for intuitive billing workflows. Developing and deploying APIs through CI/CD pipelines for seamless payer-provider integrations. Leveraging .NET microservices to optimize performance and scalability. Working with Microsoft Azure cloud services to deliver secure, high-performing, and resilient healthcare billing operations.",
+      keywords: [".NET", "Angular", "SQL", "Azure", "Azure DevOps", "Microservices"],
+    },
+    {
       title: "Associate Software Engineer I",
       company: "Carelon Global Solutions",
-      period: "July 2022 - Present",
+      period: "July 2022 - Sept 2025",
       description:
         "Playing a key role in developing and enhancing a US-based healthcare application using .NET with OOP principles and SQL as the database. Designing and implementing a dynamic front end with Angular, ensuring an intuitive user experience. Successfully developing, testing, and deploying APIs through CI/CD pipelines for seamless integration, while leveraging .NET microservices to enhance scalability and optimize performance.",
-      keywords: [".NET", "Angular", "SQL", "Azure", "Microservices"],
+      keywords: [".NET", "Angular", "SQL", "Microservices"],
     },
     {
       title: "Digital Marketing Head",
@@ -249,7 +260,11 @@ export default function Home(): ReactElement {
             className="text-xl font-bold"
           >
             <button
-              onClick={() => window.location.reload()}
+              onClick={() => {
+                // Force a fresh navigation to "/" and ensure top
+                window.history.scrollRestoration = "manual"
+                window.location.assign("/")
+              }}
               className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-blue-500 to-green-500 hover:from-purple-400 hover:via-blue-400 hover:to-green-400 transition-all duration-300"
             >
               KAP
@@ -307,10 +322,6 @@ export default function Home(): ReactElement {
             transition={{ delay: 1.6 }}
             className="flex items-center space-x-4"
           >
-            {
-              
-            }
-
             <Button
               onClick={() => scrollTo(contactRef)}
               className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-none"
@@ -366,10 +377,11 @@ export default function Home(): ReactElement {
                     <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                   </Button>
 
+                  {/* FIX: Dark neon outline for "Contact Me" */}
                   <Button
                     onClick={() => scrollTo(contactRef)}
                     variant="outline"
-                    className="text-blue-400 border-blue-500 hover:text-blue-300 hover:border-blue-400 transition-colors"
+                    className="bg-transparent border-blue-500/40 text-blue-300 hover:bg-blue-900/20 hover:text-blue-200 hover:border-blue-400/60"
                   >
                     Contact Me
                   </Button>
@@ -408,7 +420,6 @@ export default function Home(): ReactElement {
               >
                 <div className="relative">
                   <div className="aspect-square rounded-2xl overflow-hidden border border-purple-500/30 shadow-lg shadow-purple-500/10">
-                    {/* <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-blue-900/20 to-cyan-900/20 backdrop-blur-sm" /> */}
                     <img
                       src="images/Me.jpg"
                       alt="Developer Portrait"
@@ -429,13 +440,13 @@ export default function Home(): ReactElement {
               >
                 <div className="backdrop-blur-sm bg-black/30 p-6 md:p-8 rounded-2xl border border-purple-500/20 shadow-lg shadow-purple-500/5">
                   <h3 className="text-2xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">
-                    Associate Software Engineer & IoT Specialist
+                    Fullstack Developer & IoT Specialist
                   </h3>
 
                   <p className="text-gray-300 mb-6">
                     An independent and self-motivated professional with strong programming, algorithms, and
-                    problem-solving skills. I specialize in building robust, scalable applications using .NET and
-                    Angular, with a focus on healthcare solutions and IoT technologies.
+                    problem-solving skills. I specialize in building robust, scalable applications using .NET, Azure and
+                    Angular with a focus on healthcare solutions and IoT technologies.
                   </p>
 
                   <p className="text-gray-300 mb-6">

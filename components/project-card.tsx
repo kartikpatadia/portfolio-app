@@ -99,7 +99,7 @@ const ProjectCard = ({ project, index }: ProjectProps) => {
               asChild
               size="sm"
               variant="outline"
-              className="border-purple-500 text-purple-400 hover:bg-purple-950/30 hover:text-purple-300"
+              className="bg-transparent border-purple-500 text-purple-300 hover:bg-purple-900/30 hover:text-purple-200 hover:border-purple-400/60 shadow-[0_0_0_1px_rgba(168,85,247,0.25),0_0_12px_rgba(168,85,247,0.18)]"
             >
               <a href={project.github} target="_blank" rel="noopener noreferrer">
                 <Github className="mr-2 h-4 w-4" />
