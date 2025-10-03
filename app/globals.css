@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===== CSS Variables / Theming ===== */
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -24,6 +25,7 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.5rem;
+    color-scheme: light dark; /* native controls honor theme */
   }
 
   .dark {
@@ -47,88 +49,82 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 224.3 76.3% 48%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 }
 
-/* Enhanced smooth scrolling */
+/* ===== Scrolling ===== */
 html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 80px; /* Account for fixed header */
+  scroll-behavior: smooth;           /* keep only here (and optional .smooth-scroll) */
+  scroll-padding-top: 80px;          /* fixed header offset */
+  scrollbar-gutter: stable both-edges; /* prevent layout shift when scrollbar appears */
 }
 
-/* Smooth scrolling for all elements */
+.smooth-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch; /* iOS momentum scroll */
+}
+
+/* Remove global scroll-behavior/transition on all elements (perf & correctness) */
 * {
-  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* Custom scrollbar with smooth appearance */
+/* ===== Scrollbar (WebKit + Firefox) ===== */
 ::-webkit-scrollbar {
   width: 8px;
 }
-
 ::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.2);
   border-radius: 4px;
 }
-
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(to bottom, #9333ea, #3b82f6);
   border-radius: 4px;
   transition: background 0.3s ease;
 }
-
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(to bottom, #a855f7, #60a5fa);
 }
-
-/* Smooth transitions for all elements */
+/* Firefox */
 * {
-  -webkit-tap-highlight-color: transparent;
-  transition: scroll-behavior 0.3s ease;
+  scrollbar-width: thin;
+  scrollbar-color: #6d28d9 #1f2937; /* thumb track */
 }
 
-/* Ensure smooth scrolling on mobile devices */
+/* ===== Accessibility / Motion ===== */
+:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+::selection {
+  background: hsl(259 94% 51% / 0.3); /* purple glow */
+  color: inherit;
+}
+
 @media (max-width: 768px) {
   html {
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  body {
     -webkit-overflow-scrolling: touch;
   }
 }
 
-/* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-
   * {
-    scroll-behavior: auto;
-    transition: none !important;
     animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
   }
-}
-
-/* Additional smooth scrolling enhancements */
-.smooth-scroll {
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Optimize rendering for smooth scrolling */
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
 }
